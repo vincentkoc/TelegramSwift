@@ -2481,6 +2481,11 @@ class ChatRowItem: TableRowItem {
                     if threadId == message.threadId && Int64(attribute.messageId.id) == threadId {
                         ignore = true
                     }
+                    // Topic-root associations also appear in the chat overview.
+                    // Suppress their creation notice without changing explicit quote handling.
+                    if !attribute.isQuote, let action = replyMessage.media.first as? TelegramMediaAction, case .topicCreated = action.action {
+                        ignore = true
+                    }
                     
                     if message.media.first is TelegramMediaGiveawayResults {
                         ignore = true
